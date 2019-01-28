@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dq-count-extractor
+spec:
+  template:
+    spec:
+      containers:
+      - name: dq-count-extractor
+        image: quay.io/ukhomeofficedigital/dq-count-extractor:v2
+        securityContext:
+          runAsNonRoot: true
+        env:
+        - name: START_DATE
+          value: '2017/07/25'
+        - name: END_DATE
+          value: '2017/07/27'
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: dq-count-extractor
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: dq-count-extractor
+              key: AWS_SECRET_ACCESS_KEY
+        - name: BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: dq-count-extractor
+              key: BUCKET
+        - name: AWS_DEFAULT_REGION
+          value: 'eu-west-2'
+      restartPolicy: Never
