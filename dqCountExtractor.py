@@ -14,14 +14,6 @@ class DQCountExtractor(object):
     def __init__(self):
 
         # self.set_input()
-        self.set_input_from_env()
-        start_year, start_mon, start_day = self.start_date.split("/")
-        end_year, end_mon, end_day = self.end_date.split("/")
-        self.d1 = date(int(start_year), int(start_mon), int(start_day))
-        d2 = date(int(end_year), int(end_mon), int(end_day))
-        self.delta = d2 - self.d1
-
-    def set_input_from_env(self):
         self.should_multi_process = os.environ['MULTI_PROCESS']  # Set it to 'true' if multi-processing required
 
         if self.should_multi_process == 'true':
@@ -34,6 +26,12 @@ class DQCountExtractor(object):
         self.bucket = os.environ['BUCKET']
         self.start_date = os.environ['START_DATE']
         self.end_date = os.environ['END_DATE']
+
+        start_year, start_mon, start_day = self.start_date.split("/")
+        end_year, end_mon, end_day = self.end_date.split("/")
+        self.d1 = date(int(start_year), int(start_mon), int(start_day))
+        d2 = date(int(end_year), int(end_mon), int(end_day))
+        self.delta = d2 - self.d1
 
     def count_extractor(self):
         session = boto3.Session(aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.
