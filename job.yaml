@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: dq-count-extractor
-        image: quay.io/ukhomeofficedigital/dq-count-extractor:v2
+        image: quay.io/ukhomeofficedigital/dq-count-extractor:latest
         securityContext:
           runAsNonRoot: true
         env:
@@ -15,6 +15,10 @@ spec:
           value: '2017/07/25'
         - name: END_DATE
           value: '2017/07/27'
+        - name: MULTI_PROCESS
+          value: 'true'
+        - name: POOL_SIZE
+          value: '8'
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
