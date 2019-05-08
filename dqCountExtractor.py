@@ -13,12 +13,6 @@ class DQCountExtractor(object):
 
     def __init__(self):
 
-        # self.set_input()
-        self.should_multi_process = os.environ['MULTI_PROCESS']  # Set it to 'true' if multi-processing required
-
-        if self.should_multi_process == 'true':
-            self.pool_size = int(os.environ['POOL_SIZE']) # Number of processes that should run in parallel
-
         self.aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
         self.aws_access_key_id = os.environ['AWS_ACCESS_KEY_ID']
         self.aws_region_name = os.environ['AWS_DEFAULT_REGION']
@@ -33,7 +27,7 @@ class DQCountExtractor(object):
         d2 = date(int(end_year), int(end_mon), int(end_day))
         self.delta = d2 - self.d1
 
-    def count_extractor(self):
+    def count_extractor(self, should_multi_process=True):
         session = boto3.Session(aws_access_key_id=self.aws_access_key_id, aws_secret_access_key=self.
                                 aws_secret_access_key, region_name=self.aws_region_name)
 
@@ -44,9 +38,10 @@ class DQCountExtractor(object):
 
         return_list = []
 
-        if self.should_multi_process != 'false':
+        if should_multi_process:
+            pool_size = int(os.environ['POOL_SIZE']) # Number of processes that should run in parallel
             try:
-                p = mp.Pool(self.pool_size)
+                p = mp.Pool(pool_size)
                 p_map = p.map(get_results, get_result_args)
                 return_list = p_map
             finally:

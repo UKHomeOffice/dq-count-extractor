@@ -75,9 +75,7 @@ class DQCountExtractorTest(TestCase):
         'AWS_DEFAULT_REGION':AWS_REGION,
         'BUCKET':MY_BUCKET,
         'START_DATE':START_DATE,
-        'END_DATE':END_DATE,
-        'MULTI_PROCESS':'false'
-
+        'END_DATE':END_DATE
     })
     @mock.patch('dqCountExtractor.print')
     def test_ConnectedToS3_InConstructor(self, mock_print):
@@ -91,7 +89,7 @@ class DQCountExtractorTest(TestCase):
         assert count_extractor.end_date == END_DATE
         assert count_extractor.bucket == MY_BUCKET
 
-        count_extractor.count_extractor()
+        count_extractor.count_extractor(False)
         count_list = ['2017/07/25', 1, 4, 6112]
         mock_print.assert_called_with(count_list)
 
@@ -101,9 +99,7 @@ class DQCountExtractorTest(TestCase):
         'AWS_DEFAULT_REGION':AWS_REGION,
         'BUCKET':MY_BUCKET,
         'START_DATE':START_DATE,
-        'END_DATE':'2017/07/26',
-        'MULTI_PROCESS':'false'
-
+        'END_DATE':'2017/07/26'
     })
     @mock.patch('dqCountExtractor.print')
     def test_xmls_counted_when_nozip_for_one_date(self, mock_print):
@@ -117,7 +113,7 @@ class DQCountExtractorTest(TestCase):
         assert count_extractor.end_date == '2017/07/26'
         assert count_extractor.bucket == MY_BUCKET
 
-        count_extractor.count_extractor()
+        count_extractor.count_extractor(False)
 
         calls = [ call(['2017/07/25', 1, 4, 6112]),call(['2017/07/26', 0, 0, 0])]
 
