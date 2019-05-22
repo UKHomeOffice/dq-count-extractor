@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commonAPIPlus xmlns="http://www.ibm.com/semaphore/commonAPI/">
+  <pnrDetails>
+    <pnrData>
+      <pnrDetail>
+        <pnrLocator>BMA00001</pnrLocator>
+        <travelAgent>TAGENT</travelAgent>
+        <bookingDate>2018-05-15 09:14:00</bookingDate>
+        <creationDate>2018-05-15</creationDate>
+        <passengerDetails>
+          <passenger>
+            <surname>YBBBB</surname>
+            <firstname>BYYYY</firstname>
+            <pnrPassengerRef>BYYYY01</pnrPassengerRef>
+          </passenger>
+        </passengerDetails>
+      </pnrDetail>
+    </pnrData>
+    <flightSummary>
+      <airlineCode>BMA</airlineCode>
+      <flightCode>BMA0002</flightCode>
+      <flightArrivalDate>2018-07-23</flightArrivalDate>
+      <flightArrivalTime>0918</flightArrivalTime>
+      <flightDepartureDate>2018-07-23</flightDepartureDate>
+      <flightDepartureTime>1615</flightDepartureTime>
+      <flightDepartureAirport>MBA</flightDepartureAirport>
+      <flightArrivalAirport>ABM</flightArrivalAirport>
+    </flightSummary>
+  </pnrDetails>
+  <SourceData>
+    <Source>PNRGov</Source>
+    <Type>PNR</Type>
+    <Component>PNRGovMessageHandler</Component>
+    <Subject>BA;DCS00001;LHR;2017-07-25;1238</Subject>
+  </SourceData>
+  <manifestDetails>
+    <manifestGUID>e81b2657-d64e-478f-bb70-fcea0994af3a</manifestGUID>
+    <paxCount>1</paxCount>
+    <datetimeReceived>2018-07-20T11:22:00Z</datetimeReceived>
+    <protocol>MQ</protocol>
+    <dataType>PNR</dataType>
+  </manifestDetails>
+</commonAPIPlus>
