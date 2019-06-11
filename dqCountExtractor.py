@@ -4,7 +4,6 @@ from datetime import date, timedelta
 import io
 import os
 import zipfile
-
 import pathos.multiprocessing as mp
 
 
@@ -20,9 +19,11 @@ class DQCountExtractor(object):
         self.bucket = os.environ['BUCKET']
         self.start_date = os.environ['START_DATE']
         self.end_date = os.environ['END_DATE']
-
-        start_year, start_mon, start_day = self.start_date.split("/")
-        end_year, end_mon, end_day = self.end_date.split("/")
+        self.date_separator = "/"
+        if self.start_date.find("-") > 0 and self.end_date.find("-") > 0:
+            self.date_separator = "-"
+        start_year, start_mon, start_day = self.start_date.split(self.date_separator)
+        end_year, end_mon, end_day = self.end_date.split(self.date_separator)
         self.d1 = date(int(start_year), int(start_mon), int(start_day))
         d2 = date(int(end_year), int(end_mon), int(end_day))
         self.delta = d2 - self.d1
@@ -34,8 +35,7 @@ class DQCountExtractor(object):
         print("AWS session started...")
         get_result_args = []
         for i in range(self.delta.days + 1):
-            get_result_args.append((i,self.d1, session, self.bucket))
-
+            get_result_args.append((i, self.d1, session, self.bucket, self.date_separator))
         return_list = []
 
         if should_multi_process:
@@ -51,8 +51,8 @@ class DQCountExtractor(object):
                 r = get_results(d)
                 return_list.append(r)
 
-        for e in return_list:
-            print(e)
+        # for e in return_list:
+        #     print(e)
 
 
 def get_results(t):
@@ -60,12 +60,18 @@ def get_results(t):
     start_date = t[1]
     aws_session = t[2]
     bucket_name = t[3]
-    file_received_date = datetime.datetime.strptime(str(start_date + timedelta(day)), '%Y-%m-%d').strftime('%Y/%m/%d')
-
+    date_separator = t[4]
+    if date_separator == "/":
+        file_received_date = datetime.datetime.strptime(str(start_date + timedelta(day)), '%Y-%m-%d').\
+            strftime('%Y/%m/%d')
+        key_prefix = 's4/parsed/' + str(file_received_date) + '/'
+    else:
+        file_received_date = datetime.datetime.strptime(str(start_date + timedelta(day)), '%Y-%m-%d').\
+            strftime('%Y-%m-%d')
+        key_prefix = 'parsed/' + str(file_received_date) + '/'
     s3 = aws_session.resource('s3')
     s3_bucket = s3.Bucket(bucket_name)
-
-    filtered_objects = s3_bucket.objects.filter(Prefix='s4/parsed/' + str(file_received_date) + '/')
+    filtered_objects = s3_bucket.objects.filter(Prefix=key_prefix)
     return get_counts(filtered_objects, file_received_date)
 
 
@@ -85,6 +91,7 @@ def get_counts(filtered_objects, file_received_date):
                             deflate_file_size = xml_info.file_size
                             uncompressed_xml_size = uncompressed_xml_size + deflate_file_size
     count_list = [file_received_date, zip_file_counter, xml_file_counter, uncompressed_xml_size]
+    print(count_list)
     return count_list
 
 
