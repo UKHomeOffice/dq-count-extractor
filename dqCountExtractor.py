@@ -64,12 +64,13 @@ def get_results(t):
     if date_separator == "/":
         file_received_date = datetime.datetime.strptime(str(start_date + timedelta(day)), '%Y-%m-%d').\
             strftime('%Y/%m/%d')
+        key_prefix = 's4/parsed/' + str(file_received_date) + '/'
     else:
         file_received_date = datetime.datetime.strptime(str(start_date + timedelta(day)), '%Y-%m-%d').\
             strftime('%Y-%m-%d')
+        key_prefix = 'parsed/' + str(file_received_date) + '/'
     s3 = aws_session.resource('s3')
     s3_bucket = s3.Bucket(bucket_name)
-    key_prefix = 's4/parsed/' + str(file_received_date) + '/'
     filtered_objects = s3_bucket.objects.filter(Prefix=key_prefix)
     return get_counts(filtered_objects, file_received_date)
 
