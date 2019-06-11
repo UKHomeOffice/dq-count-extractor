@@ -6,9 +6,9 @@ A tool to produce the a table of data consisting of Received date, Zip count, XM
 
 The following inputs can be set in the job.yaml to be accessed in the python script as environment variables. 
 
-* START_DATE - Start date in dd/mm/yyyy format of the ingest that we want the script to target
+* START_DATE - Start date in yyyy/mm/dd or yyyy-mm-dd format of the ingest that we want the script to target
 
-* END_DATE - End date in dd/mm/yyyy format of the ingest that we want the script to target
+* END_DATE - End date in yyyy/mm/dd or yyyy-mm-dd format of the ingest that we want the script to target
 
 * POOL_SIZE - Holds the pool size setting for the script, by default set to 8 in the job.yaml file. This can be increased for quicker processing if targeting a wider date range
 
